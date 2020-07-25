@@ -16,7 +16,8 @@ class UserSeeder extends Seeder
         		'name' => 'administrador',
         		'email' => 'admin@rapid-ecommerce.com',
         		'password' => bcrypt('administrador'),
-        		'role' => 'admin'
+        		'role' => 'admin',
+                'shop_name' => 'Rapid Ecommerce'
         	]
         ]);
     }
