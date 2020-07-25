@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Order;
 use DB;
 
 class HomeController extends Controller
@@ -27,7 +28,8 @@ class HomeController extends Controller
         $orders = DB::table('orders')->count();
         $products = DB::table('products')->count();
         $categories = DB::table('categories')->count();
+        $orderss = Order::where('read','=','N')->get();
 
-        return view('home',['orders' => $orders, 'products' => $products, 'categories' => $categories]);
+        return view('home',['orders' => $orders, 'products' => $products, 'categories' => $categories, 'orderss' => $orderss]);
     }
 }

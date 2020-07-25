@@ -14,6 +14,7 @@ class SiteController extends Controller
 {
     public function index($type = NULL, $value = NULL){
     	$set_value = "";
+        $category_id = '';
     	if($type == NULL){
     		$products = Product::all();
     	}else if($type == 'category'){
@@ -26,7 +27,7 @@ class SiteController extends Controller
     	
     	$data = User::where('role','=','admin')->first();
     	$categories = Category::all();
-    	return view('shop',['products' => $products, 'data' => $data, 'categories' => $categories,'value' => $set_value]);
+    	return view('shop',['products' => $products, 'data' => $data, 'categories' => $categories,'value' => $set_value, 'category_id' => $category_id]);
     }
 
     public function save_order(Request $request){

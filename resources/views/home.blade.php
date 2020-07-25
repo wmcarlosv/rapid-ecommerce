@@ -48,7 +48,15 @@
                             <th>Monto Total</th>
                         </thead>
                         <tbody>
-                            
+                            @foreach($orderss as $order)
+                                <tr>
+                                    <td>{{ $order->id }}</td>
+                                    <td>{{ $order->customer_order }}</td>
+                                    <td>{{ $order->customer_email }}</td>
+                                    <td>{{ $order->customer_phone }}</td>
+                                    <td>{{ $order->total }}</td>
+                                </tr>
+                            @endforeach
                         </tbody>            
                     </table>
     			</div>

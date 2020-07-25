@@ -11,7 +11,8 @@
   <title>{{ $data->shop_name }}</title>
 
   <!-- Bootstrap core CSS -->
-  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"/ >
+
 
   <!-- Custom styles for this template -->
   <link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
@@ -25,8 +26,9 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="/shop">{{ $data->shop_name }}</a>
+      <a class="nav-link shoping_cart" href="#"><i class="fa fa-shopping-cart"></i> (<span id="cart_count">0</span>)</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <i class="fa fa-search"></i>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <form class="form-inline">
@@ -37,12 +39,6 @@
               </div>
           </div>
         </form>
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="#" id="shoping_cart"><i class="fa fa-shopping-cart"></i> (<span id="cart_count">0</span>)</a>
-          </li>
-        </ul>
-
       </div>
     </div>
   </nav>
@@ -52,7 +48,7 @@
 
     <div class="row">
 
-      <div class="col-lg-3">
+      <div class="col-lg-3 d-none d-lg-block d-block-md">
         <h4>Categorias</h4>
         <hr />
         <ul class="list-group">
@@ -63,25 +59,30 @@
         <br />
       </div>
 
+      <div class="col-lg-3 d-block d-lg-none">
+        <div class="form-group">
+          <label>Categorias:</label>
+          <select class="form-control" id="mobile_category">
+            <option value="">-</option>
+            @foreach($categories as $category)
+              <option value="{{ $category->id }}" @if(@$category_id == $category->id) selected='selected' @endif data-id="{{ $category->id }}">{{ $category->name }}</option>
+            @endforeach
+          </select>
+        </div>
+      </div>
+
 
       <div class="col-lg-9">
         <div class="row">
           @foreach($products as $product)
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="card">
-                <h4 class="card-header">
-                    <a href="#">{{ $product->name }}</a>
-                  </h4>
                 @if(!empty($product->photo))
                   <a href="#"><img class="card-img-top" src="{{ asset('storage/products/'.explode('/',$product->photo)[2]) }}" alt="{{ $product->name }}"></a>
                 @endif
                 <div class="card-body">
-                  <h5>${{ $product->prices }}</h5>
-                  <p class="card-text">{{ $product->category->name }}<br />
-                    @foreach($product->tags as $tag)
-                      <span class="badge badge-info">{{ $tag->name }}</span>
-                    @endforeach
-                  </p>
+                  <h5>{{ $product->name }}</h5>
+                  <p class="card-text">{{ $product->prices }}$</p>
                 </div>
                 <div class="card-footer">
                   <div class="input-group">
@@ -107,6 +108,12 @@
   <!-- /.container -->
 
   <!-- Footer -->
+  <div class="row fixed-bottom" id="total_buttom">
+    <div class="col-md-12">
+        <a class="btn btn-success btn-block shoping_cart"style="padding:20px 0px !important;" href="#">Enviar Pedido a WhatsApp <span id="total_amount">0$</span></a>
+    </div>
+  </div>
+
   <footer class="py-5 bg-dark">
     <div class="container">
       <p class="m-0 text-center text-white">Copyright &copy; {{ $data->shop_name }} 2020</p>
@@ -134,19 +141,19 @@
                   <div class="col-md-4">
                     <div class="form-group">
                       <label>Nombre Cliente:</label>
-                      <input type="text" name="customer_name" class="form-control">
+                      <input type="text" name="customer_name" required="required" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                       <label>Email Cliente:</label>
-                      <input type="email" name="customer_email" class="form-control">
+                      <input type="email" name="customer_email" required="required" class="form-control">
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                       <label>Telefono Cliente:</label>
-                      <input type="text" name="customer_phone" class="form-control">
+                      <input type="tel" name="customer_phone" required="required" class="form-control">
                     </div>
                   </div>
                 </div>
@@ -154,7 +161,7 @@
                   <thead>
                     <th>Nombre</th>
                     <th>Precio</th>
-                    <th>Cantidad</th>
+                    <th>Cant</th>
                     <th>Total</th>
                   </thead>
                   <tbody id="load_shopping_cart"></tbody>
@@ -206,7 +213,7 @@
 
       });
 
-      $("#shoping_cart").click(function(){
+      $(".shoping_cart").click(function(){
 
         $("#myModal").modal("show");
 
@@ -223,11 +230,31 @@
           html+="</tr>";
           grandtotal = parseFloat(grandtotal + data[i].total);
         }
-        html+="<tr><td colspan='3' align='right'>TOTAL:</td><td><input type='hidden' name='grandtotal' value='"+grandtotal+"' /> "+grandtotal+"$</td></tr>";
+        html+="<tr><td><button type='button' class='trash_cart btn btn-danger'><i class='fa fa-shopping-cart'></i> -</button></td><td colspan='2' align='right'>TOTAL:</td><td><input type='hidden' name='grandtotal' value='"+grandtotal+"' /> "+grandtotal+"$</td></tr>";
 
         $("#load_shopping_cart").html(html);
         grandtotal = 0;
       });  
+
+      $("#mobile_category").change(function(){
+        let data = $(this).children("option:selected").attr("data-id");
+        let name = $(this).children("option:selected").text().replace(" ","-").toLowerCase();
+        if($(this).val()){
+          location.href = "/shop/category/"+name+"-"+data;
+        }else{
+          location.href ='/shop';
+        }
+        
+      });
+
+      $("body").on('click','.trash_cart', function(){
+        if(window.localStorage.getItem("cart")){
+          window.localStorage.removeItem('cart');
+          updateCountCart();
+        }
+
+        $("#myModal").modal('hide');
+      });
 
     });
 
@@ -241,6 +268,20 @@
 
     function updateCountCart(){
       var data = JSON.parse(window.localStorage.getItem("cart")) || [];
+      var total = 0;
+
+      for(var i = 0; i < data.length; i++){
+        total = total+data[i].total;
+      }
+
+      if(total > 0){
+        $("#total_buttom").show();
+        $("#total_amount").text(total+"$");
+      }else{
+         $("#total_buttom").hide();
+      }
+
+      
       $("#cart_count").html(data.length);
     } 
 
