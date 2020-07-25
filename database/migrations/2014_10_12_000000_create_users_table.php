@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('region',120)->nullable();
             $table->string('city',120)->nullable();
             $table->text('address')->nullable();
+            $table->string('shop_name',100)->nullable();
             $table->timestamps();
         });
     }

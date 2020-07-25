@@ -32,6 +32,10 @@
                             <input type="text" name="email" class="form-control" id="email" value="{{ Auth::user()->email }}" />
                         </div>
                         <div class="form-group">
+                            <label>Nombre de Tienda:</label>
+                            <input type="text" name="shop_name" class="form-control" value="{{ Auth::user()->shop_name }}">
+                        </div>
+                        <div class="form-group">
                             <label>Telefono:</label>
                             <input type="text" name="phone" class="form-control" value="{{ Auth::user()->phone }}">
                         </div>
@@ -47,7 +51,6 @@
                             <label>Direccion:</label>
                             <textarea class="form-control" name="address">{{ Auth::user()->address }}</textarea>
                         </div>
-                        
                         <button type="submit" class="btn btn-success">Actualizar Perfil</button>
                     {!! Form::close() !!}
                 </div>

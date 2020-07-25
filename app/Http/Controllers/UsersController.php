@@ -92,13 +92,19 @@ class UsersController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email'
+            'email' => 'required|email',
+            'phone' => 'required'
         ]);
 
         $user = User::findorfail(Auth::user()->id);
 
         $user->name = $request->input('name');
         $user->email = $request->input('email');
+        $user->phone = $request->input('phone');
+        $user->region = $request->input('region');
+        $user->city = $request->input('city');
+        $user->address = $request->input('address');
+        $user->shop_name = $request->input('shop_name');
 
         if($user->Update()){
             flash('Perfil Actualizado Con Exito!!')->success();

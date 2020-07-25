@@ -13,13 +13,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function(){
+	return redirect()->route('site.home');
 });
 
-Auth::routes();
+Route::get('/shop/{type?}/{value?}','SiteController@index')->name('site.home');
+Route::post('/shop/save_order','SiteController@save_order')->name('site.save_order');
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
 
 Route::middleware(['auth'])->prefix('admin')->group(function(){
 

@@ -17,6 +17,7 @@ class CreateOrderProductsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('product_id');
+            $table->string('comment', 150)->nullable();
             $table->double('qty')->nullable(false);
             $table->double('total')->nullable(false);
             $table->timestamps();
